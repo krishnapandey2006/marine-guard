@@ -1,0 +1,8 @@
+{
+  "name": "MarineGuard",
+  "description": "Maritime environmental intelligence platform for satellite oil spill detection, SAR imagery analysis, and vessel attribution.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
