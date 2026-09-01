@@ -1,0 +1,104 @@
+@import "tailwindcss";
+@config "../tailwind.config.js";
+
+:root {
+  --bg-primary: #070A0E;
+  --bg-surface: #111822;
+  --bg-surface-elevated: #162230;
+  --bg-surface-hover: #1C2B3C;
+  --border-subtle: #243548;
+  --border-strong: #334860;
+  --text-primary: #F0F4F8;
+  --text-secondary: #8FA0B2;
+  --text-muted: #60758B;
+  --accent-teal: #14B8A6;
+  --accent-teal-muted: #0D9488;
+  --accent-teal-subtle: rgba(20, 184, 166, 0.1);
+  --status-ready: #10B981;
+  --status-warning: #F59E0B;
+  --status-danger: #EF4444;
+}
+
+* {
+  border-color: var(--border-subtle);
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+/* Custom scrollbar for technical console look */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0B0F14;
+}
+::-webkit-scrollbar-thumb {
+  background: #243548;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #334860;
+}
+
+/* Maritime Technical Grid & Radar Utilities */
+.maritime-grid {
+  background-image: 
+    linear-gradient(to right, rgba(36, 53, 72, 0.25) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(36, 53, 72, 0.25) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.maritime-grid-fine {
+  background-image: 
+    linear-gradient(to right, rgba(36, 53, 72, 0.15) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(36, 53, 72, 0.15) 1px, transparent 1px);
+  background-size: 12px 12px;
+}
+
+.radar-sweep-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: conic-gradient(
+    from 0deg at 50% 50%,
+    rgba(20, 184, 166, 0) 0deg,
+    rgba(20, 184, 166, 0.18) 45deg,
+    rgba(20, 184, 166, 0) 50deg
+  );
+  border-radius: 50%;
+  animation: radar-spin 6s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes radar-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.technical-border {
+  border: 1px solid rgba(51, 72, 96, 0.6);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+}
+
+.console-card {
+  background-color: #111822;
+  border: 1px solid #243548;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+.focus-ring:focus {
+  outline: none;
+  box-shadow: 0 0 0 1px #14B8A6;
+  border-color: #14B8A6;
+}
