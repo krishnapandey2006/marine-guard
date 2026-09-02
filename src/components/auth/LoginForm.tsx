@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, AlertCircle } from 'lucide-react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Mail, Lock, AlertCircle, ShieldAlert } from 'lucide-react';
 import { Input } from '../common/Input';
 import { Button } from '../common/Button';
 import { GoogleAuthButton } from '../common/GoogleAuthButton';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/useAuth';
 
 export const LoginForm: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -12,6 +12,9 @@ export const LoginForm: React.FC = () => {
   const [formErrors, setFormErrors] = useState<{ email?: string; password?: string }>({});
   const { login, loginWithGoogle, isLoading, error, clearError } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirectUrl = searchParams.get('redirect') || '/dashboard';
+  const isAnalysisRedirect = redirectUrl.includes('analyze');
 
   const validate = () => {
     const errors: { email?: string; password?: string } = {};
@@ -38,7 +41,7 @@ export const LoginForm: React.FC = () => {
 
     try {
       await login({ email, password });
-      navigate('/dashboard');
+      navigate(redirectUrl);
     } catch {
       // Error handled by AuthContext
     }
@@ -48,7 +51,7 @@ export const LoginForm: React.FC = () => {
     clearError();
     try {
       await loginWithGoogle();
-      navigate('/dashboard');
+      navigate(redirectUrl);
     } catch {
       // Error handled by AuthContext
     }
@@ -57,6 +60,19 @@ export const LoginForm: React.FC = () => {
   return (
     <div className="space-y-5">
       
+      {/* Contextual Notice if redirected from analysis */}
+      {isAnalysisRedirect && (
+        <div className="p-3 bg-teal-950/80 border border-teal-700/80 rounded flex items-start gap-2.5 text-xs text-teal-200">
+          <ShieldAlert className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" />
+          <div className="space-y-0.5">
+            <span className="font-semibold text-teal-300">Authentication Required for Analysis</span>
+            <p className="text-teal-200/90 text-[11px]">
+              Sign in with your analyst credentials to access satellite SAR image ingestion and detection algorithms.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Global Error Banner */}
       {error && (
         <div className="p-3 bg-red-950/70 border border-red-800/80 rounded flex items-start gap-2 text-xs text-red-200">
@@ -96,15 +112,6 @@ export const LoginForm: React.FC = () => {
             autoComplete="current-password"
             disabled={isLoading}
           />
-          <div className="flex justify-end mt-1.5">
-            <button
-              type="button"
-              onClick={() => alert('Password reset service will be configured with Firebase in Step 2.')}
-              className="text-xs text-teal-400 hover:text-teal-300 transition-colors font-mono focus:outline-none"
-            >
-              Forgot password?
-            </button>
-          </div>
         </div>
 
         <Button
@@ -136,7 +143,10 @@ export const LoginForm: React.FC = () => {
       {/* Footer Switch */}
       <div className="text-center pt-2 text-xs text-marine-400">
         New to MarineGuard?{' '}
-        <Link to="/signup" className="text-teal-400 hover:text-teal-300 font-semibold transition-colors">
+        <Link 
+          to={redirectUrl !== '/dashboard' ? `/signup?redirect=${encodeURIComponent(redirectUrl)}` : '/signup'} 
+          className="text-teal-400 hover:text-teal-300 font-semibold transition-colors"
+        >
           Create an Analyst Account
         </Link>
       </div>

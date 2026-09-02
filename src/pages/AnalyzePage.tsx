@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   ScanEye, 
   ArrowRight, 
-  RotateCcw
+  RotateCcw 
 } from 'lucide-react';
 import { UploadPanel } from '../components/analyze/UploadPanel';
 import { ImagePreview } from '../components/analyze/ImagePreview';

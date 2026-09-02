@@ -41,10 +41,7 @@ export const HowItWorks: React.FC = () => {
   ];
 
   return (
-    <section
-      id="how-it-works"
-      className="py-16 sm:py-24 border-b border-marine-800/80 bg-marine-950/60 relative"
-    >
+    <section id="how-it-works" className="py-16 sm:py-24 border-b border-marine-800/80 bg-marine-950/60 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
@@ -73,9 +70,9 @@ export const HowItWorks: React.FC = () => {
                 <div
                   key={step.num}
                   onClick={() => setActiveStage(step.num)}
-                  className={`cursor-pointer rounded-lg p-4 border transition-all duration-150 text-left ${
+                  className={`cursor-pointer rounded-lg p-4 border transition-colors duration-150 text-left ${
                     isActive
-                      ? 'bg-marine-900/90 border-marine-600/90 shadow-sm'
+                      ? 'bg-marine-900/90 border-teal-500/70 shadow-sm ring-1 ring-teal-500/30'
                       : 'bg-marine-900/30 border-marine-800/60 hover:bg-marine-900/60 hover:border-marine-700/60'
                   }`}
                 >
@@ -98,19 +95,17 @@ export const HowItWorks: React.FC = () => {
                           {step.num} — {step.title}
                         </h3>
                         <ChevronRight
-                          className={`w-4 h-4 shrink-0 transition-transform ${
-                            isActive ? 'text-teal-400 translate-x-0.5' : 'text-marine-600'
+                          className={`w-4 h-4 shrink-0 transition-transform duration-200 ${
+                            isActive ? 'text-teal-400 rotate-90' : 'text-marine-500'
                           }`}
                         />
                       </div>
-
-                      <p className="text-xs text-marine-300 mt-1 leading-relaxed">
+                      <p className="text-xs text-marine-400 mt-1 leading-snug">
                         {step.desc}
                       </p>
 
-                      {/* Quiet Supporting Detail */}
                       {isActive && (
-                        <div className="mt-2.5 pt-2.5 border-t border-marine-800 text-xs text-marine-400 leading-normal">
+                        <div className="mt-2.5 pt-2.5 border-t border-marine-800 text-xs text-teal-300/90 font-mono animate-fadeIn">
                           {step.detail}
                         </div>
                       )}
@@ -121,13 +116,12 @@ export const HowItWorks: React.FC = () => {
             })}
           </div>
 
-          {/* Right Column: Tactical Radar Visualization */}
-          <div className="lg:col-span-7 w-full flex items-center justify-center">
+          {/* Right Column: Interactive Radar Canvas */}
+          <div className="lg:col-span-7 flex justify-center">
             <RadarVisualization activeStep={activeStage} />
           </div>
 
         </div>
-
       </div>
     </section>
   );

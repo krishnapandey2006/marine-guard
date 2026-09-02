@@ -54,10 +54,7 @@ export const TechnologySection: React.FC = () => {
   ];
 
   return (
-    <section
-      id="technology"
-      className="py-16 sm:py-24 border-b border-marine-800/80 bg-marine-900/30 relative"
-    >
+    <section id="technology" className="py-16 sm:py-24 border-b border-marine-800/80 bg-marine-900/30 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
@@ -99,36 +96,30 @@ export const TechnologySection: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Scannable Breakdown: Function & Operational Impact */}
-                  <div className="space-y-3 text-xs sm:text-sm text-marine-300 leading-relaxed mb-6">
+                  {/* Descriptions */}
+                  <div className="space-y-3 mb-5 text-xs text-marine-300">
                     <div>
-                      <span className="text-xs font-medium text-marine-200 block mb-0.5">
-                        Function
-                      </span>
-                      <p className="text-xs text-marine-300/90 leading-relaxed">{item.what}</p>
+                      <span className="font-semibold text-marine-200 block mb-0.5">What it does:</span>
+                      <p className="text-marine-400 leading-relaxed">{item.what}</p>
                     </div>
                     <div>
-                      <span className="text-xs font-medium text-marine-200 block mb-0.5">
-                        Operational Impact
-                      </span>
-                      <p className="text-xs text-marine-300/90 leading-relaxed">{item.why}</p>
+                      <span className="font-semibold text-marine-200 block mb-0.5">Why it matters:</span>
+                      <p className="text-marine-400 leading-relaxed">{item.why}</p>
                     </div>
                   </div>
+                </div>
 
-                  {/* Key Capabilities Checklist */}
-                  <div className="pt-4 border-t border-marine-800/80">
-                    <span className="text-xs font-medium text-marine-400 uppercase tracking-wider block mb-2.5">
-                      Key Capabilities
-                    </span>
-                    <ul className="space-y-2 text-xs text-marine-300">
-                      {item.capabilities.map((cap, cIdx) => (
-                        <li key={cIdx} className="flex items-start gap-2">
-                          <Check className="w-3.5 h-3.5 text-teal-400 shrink-0 mt-0.5" />
-                          <span className="text-xs leading-relaxed text-marine-300">{cap}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                {/* Capabilities Checklist */}
+                <div className="pt-4 border-t border-marine-800/60 space-y-2">
+                  <span className="text-[11px] font-mono uppercase tracking-wider text-teal-400/90 block mb-2">
+                    Key Technical Features
+                  </span>
+                  {item.capabilities.map((cap, cIdx) => (
+                    <div key={cIdx} className="flex items-start gap-2 text-xs text-marine-300">
+                      <Check className="w-3.5 h-3.5 text-teal-400 shrink-0 mt-0.5" />
+                      <span>{cap}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             );

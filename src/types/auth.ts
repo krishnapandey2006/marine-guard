@@ -4,8 +4,11 @@ export interface User {
   displayName: string;
   role: 'analyst' | 'investigator' | 'commander' | 'admin';
   organization?: string;
+  clearanceLevel?: string;
   avatarUrl?: string;
   createdAt: string;
+  updatedAt?: string;
+  lastLoginAt?: string;
 }
 
 export interface AuthState {

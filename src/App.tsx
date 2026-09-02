@@ -5,6 +5,7 @@ import { LandingPage } from './pages/LandingPage';
 import { LoginPage } from './pages/LoginPage';
 import { SignupPage } from './pages/SignupPage';
 import { AppShell } from './components/layout/AppShell';
+import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { DashboardPage } from './pages/DashboardPage';
 import { AnalyzePage } from './pages/AnalyzePage';
 import { HistoryPage } from './pages/HistoryPage';
@@ -25,8 +26,14 @@ export const App: React.FC = () => {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/auth" element={<Navigate to="/login" replace />} />
 
-          {/* Workstation Application Shell */}
-          <Route element={<AppShell />}>
+          {/* Protected Workstation Application Shell */}
+          <Route
+            element={
+              <ProtectedRoute>
+                <AppShell />
+              </ProtectedRoute>
+            }
+          >
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/analyze" element={<AnalyzePage />} />
             <Route path="/history" element={<HistoryPage />} />

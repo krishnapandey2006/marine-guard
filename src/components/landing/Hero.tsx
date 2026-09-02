@@ -11,12 +11,8 @@ export const Hero: React.FC = () => {
   };
 
   return (
-    <section
-      id="overview"
-      className="relative pt-8 pb-16 sm:pt-14 sm:pb-24 lg:pt-20 lg:pb-28 border-b border-marine-800/80 overflow-hidden"
-    >
+    <section id="overview" className="relative pt-8 pb-16 sm:pt-14 sm:pb-24 lg:pt-20 lg:pb-28 border-b border-marine-800/80 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
         {/* Responsive Grid: Left Editorial Context, Right 3D Earth Visualization */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
           
@@ -88,7 +84,6 @@ export const Hero: React.FC = () => {
           </div>
 
         </div>
-
       </div>
     </section>
   );

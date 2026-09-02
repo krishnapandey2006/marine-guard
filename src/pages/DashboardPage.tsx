@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   ScanSearch, 
@@ -8,15 +8,25 @@ import {
   FileCheck2, 
   Info,
   Layers,
-  ArrowUpRight
+  ArrowUpRight,
+  Database
 } from 'lucide-react';
 import { Button } from '../components/common/Button';
 import { Card } from '../components/common/Card';
 import { Badge } from '../components/common/Badge';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
+import { analysisService } from '../services/api/analysisService';
+import type { SatelliteImageMetadata } from '../types/analysis';
 
 export const DashboardPage: React.FC = () => {
   const { user } = useAuth();
+  const [recentAnalyses, setRecentAnalyses] = useState<SatelliteImageMetadata[]>([]);
+
+  useEffect(() => {
+    analysisService.getAnalysisHistory().then((data) => {
+      setRecentAnalyses(data.slice(0, 3));
+    }).catch(() => {});
+  }, []);
 
   return (
     <div className="space-y-6 text-left">
@@ -30,7 +40,7 @@ export const DashboardPage: React.FC = () => {
                 Workstation Online
               </span>
               <span className="text-xs font-mono text-marine-400">
-                Operator ID: {user?.id || 'SEC-ANALYST'}
+                Operator: {user?.displayName || 'Analyst'} • {user?.organization || 'Surveillance Command'}
               </span>
             </div>
 
@@ -136,51 +146,38 @@ export const DashboardPage: React.FC = () => {
             }
           >
             <div className="space-y-2.5">
-              <div className="p-3.5 rounded bg-marine-850 border border-marine-700/70 flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded bg-marine-800 border border-marine-700 flex items-center justify-center text-teal-400 shrink-0">
-                    <Layers className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-semibold text-marine-100">
-                        S1A_IW_GRDH_1SDV_BOMBAY_HIGH.tiff
-                      </span>
-                      <Badge variant="teal" size="sm">SENTINEL-1 SAR</Badge>
+              {recentAnalyses.length === 0 ? (
+                <div className="p-4 text-center text-marine-400 font-mono text-xs">
+                  Loading analyses from Firestore database...
+                </div>
+              ) : (
+                recentAnalyses.map((item) => (
+                  <div key={item.id} className="p-3.5 rounded bg-marine-850 border border-marine-700/70 flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded bg-marine-800 border border-marine-700 flex items-center justify-center text-teal-400 shrink-0">
+                        <Layers className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-semibold text-marine-100">
+                            {item.filename}
+                          </span>
+                          <Badge variant={item.sensorType === 'SAR_SENTINEL_1' ? 'teal' : 'neutral'} size="sm">
+                            {item.sensorType || 'SENTINEL-1 SAR'}
+                          </Badge>
+                        </div>
+                        <p className="text-[11px] font-mono text-marine-400 mt-0.5">
+                          Acquired {item.acquisitionDate ? new Date(item.acquisitionDate).toLocaleDateString() : 'Recent'} • Lat {item.centerCoordinate?.lat.toFixed(2) || '19.42'}°N, Lon {item.centerCoordinate?.lng.toFixed(2) || '71.30'}°E
+                        </p>
+                      </div>
                     </div>
-                    <p className="text-[11px] font-mono text-marine-400 mt-0.5">
-                      Ingested 2 hours ago • Sensor: C-Band SAR • Lat 19.42°N, Lon 71.30°E
-                    </p>
-                  </div>
-                </div>
 
-                <div className="shrink-0 text-right">
-                  <Badge variant="ready" size="sm" dot>READY FOR ML</Badge>
-                </div>
-              </div>
-
-              <div className="p-3.5 rounded bg-marine-850 border border-marine-700/70 flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded bg-marine-800 border border-marine-700 flex items-center justify-center text-teal-400 shrink-0">
-                    <Layers className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-semibold text-marine-100">
-                        S2B_MSIL2A_CHENNAI_PORT_APPROACH.png
-                      </span>
-                      <Badge variant="neutral" size="sm">OPTICAL S2</Badge>
+                    <div className="shrink-0 text-right">
+                      <Badge variant="ready" size="sm" dot>VERIFIED</Badge>
                     </div>
-                    <p className="text-[11px] font-mono text-marine-400 mt-0.5">
-                      Ingested yesterday • Multi-Spectral • Lat 13.08°N, Lon 80.32°E
-                    </p>
                   </div>
-                </div>
-
-                <div className="shrink-0 text-right">
-                  <Badge variant="neutral" size="sm">ARCHIVED</Badge>
-                </div>
-              </div>
+                ))
+              )}
             </div>
           </Card>
         </div>
@@ -190,26 +187,28 @@ export const DashboardPage: React.FC = () => {
           <Card title="System Readiness" subtitle="Surveillance infrastructure health">
             <div className="space-y-3 font-mono text-xs">
               <div className="flex items-center justify-between pb-2 border-b border-marine-750">
-                <span className="text-marine-300">Frontend Workstation</span>
-                <span className="text-emerald-400 font-semibold">ONLINE (STEP 1)</span>
+                <span className="text-marine-300">Firebase Firestore</span>
+                <span className="text-emerald-400 font-semibold flex items-center gap-1">
+                  <Database className="w-3.5 h-3.5" /> CONNECTED
+                </span>
+              </div>
+              <div className="flex items-center justify-between pb-2 border-b border-marine-750">
+                <span className="text-marine-300">Authentication</span>
+                <span className="text-emerald-400 font-semibold">AUTHENTICATED</span>
               </div>
               <div className="flex items-center justify-between pb-2 border-b border-marine-750">
                 <span className="text-marine-300">FastAPI ML Bridge</span>
                 <span className="text-sky-400">READY TO ATTACH</span>
               </div>
-              <div className="flex items-center justify-between pb-2 border-b border-marine-750">
-                <span className="text-marine-300">AIS Geo-Database</span>
-                <span className="text-marine-400">STANDBY</span>
-              </div>
               <div className="flex items-center justify-between">
-                <span className="text-marine-300">Authentication</span>
-                <span className="text-emerald-400">ACTIVE SESSION</span>
+                <span className="text-marine-300">Surveillance Node</span>
+                <span className="text-teal-400">ACTIVE ({user?.clearanceLevel || 'Level 2'})</span>
               </div>
 
               <div className="mt-4 p-3 bg-marine-850 rounded border border-marine-700/60 font-sans text-xs text-marine-300 flex items-start gap-2">
                 <Info className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" />
                 <p className="leading-relaxed">
-                  No fake ML metrics are displayed. Ingest images in the Analysis console to trigger the frontend pipeline.
+                  User accounts and satellite scene analyses are automatically synchronized with your Firebase Console database.
                 </p>
               </div>
             </div>

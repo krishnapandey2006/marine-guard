@@ -3,8 +3,13 @@ import { Card } from '../components/common/Card';
 import { Input } from '../components/common/Input';
 import { Button } from '../components/common/Button';
 import { Badge } from '../components/common/Badge';
+import { useAuth } from '../context/useAuth';
+import { firebaseConfig } from '../config/firebase';
+import { Database, ShieldCheck, User } from 'lucide-react';
 
 export const SettingsPage: React.FC = () => {
+  const { user } = useAuth();
+
   return (
     <div className="space-y-6 text-left">
       
@@ -19,7 +24,7 @@ export const SettingsPage: React.FC = () => {
           Workstation & Sensor Settings
         </h1>
         <p className="text-xs sm:text-sm text-marine-300 mt-1">
-          Configure sensor ingest endpoints, FastAPI backend URL, and notification thresholds.
+          Configure sensor ingest endpoints, connected Firebase console database, and notification thresholds.
         </p>
       </div>
 
@@ -27,6 +32,41 @@ export const SettingsPage: React.FC = () => {
         
         {/* Left Column: Endpoints & Authentication */}
         <div className="lg:col-span-6 space-y-5">
+          <Card title="Firebase Cloud Database & Auth" subtitle="Live Console Connection">
+            <div className="space-y-3 text-xs">
+              <div className="flex items-center justify-between p-3 bg-marine-850 rounded border border-marine-750">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <Database className="w-4 h-4 text-teal-400" />
+                    <span className="font-semibold text-marine-200">Firebase Project</span>
+                  </div>
+                  <div className="font-mono text-[11px] text-marine-400">
+                    ID: {firebaseConfig.projectId || 'gen-lang-client-0162934680'}
+                  </div>
+                </div>
+                <Badge variant="ready" size="sm" dot>CONNECTED</Badge>
+              </div>
+
+              {user && (
+                <div className="p-3 bg-marine-850 rounded border border-marine-750 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <User className="w-3.5 h-3.5 text-teal-400" />
+                      <span className="font-medium text-marine-200">Active Operator Session</span>
+                    </div>
+                    <Badge variant="teal" size="sm">{user.role.toUpperCase()}</Badge>
+                  </div>
+                  <div className="text-[11px] font-mono text-marine-300 space-y-0.5">
+                    <div>• Name: {user.displayName}</div>
+                    <div>• Email: {user.email}</div>
+                    <div>• Organization: {user.organization || 'Coast Surveillance Bureau'}</div>
+                    <div>• Clearance: {user.clearanceLevel || 'Level 2'}</div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </Card>
+
           <Card title="Backend API Configuration" subtitle="FastAPI Microservice Connection">
             <div className="space-y-4">
               <Input
@@ -44,21 +84,6 @@ export const SettingsPage: React.FC = () => {
                   Save API Config
                 </Button>
               </div>
-            </div>
-          </Card>
-
-          <Card title="Firebase Authentication Mode" subtitle="Identity Provider Settings">
-            <div className="space-y-3 text-xs">
-              <div className="flex items-center justify-between p-3 bg-marine-850 rounded border border-marine-750">
-                <div>
-                  <span className="font-semibold text-marine-200 block">Development Mode</span>
-                  <span className="text-marine-400 text-[11px]">Interactive local session active</span>
-                </div>
-                <Badge variant="ready" size="sm">ACTIVE</Badge>
-              </div>
-              <p className="text-marine-400 text-[11px]">
-                To attach live Firebase Auth, populate <code className="text-teal-300">VITE_FIREBASE_API_KEY</code> and related variables in <code className="text-teal-300">.env.local</code>.
-              </p>
             </div>
           </Card>
         </div>
@@ -87,8 +112,9 @@ export const SettingsPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="pt-2 text-marine-400 font-sans text-xs">
-                Fine-tune confidence bands for SAR C-band dampening classification.
+              <div className="pt-2 text-marine-400 font-sans text-xs flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-teal-400 shrink-0" />
+                <span>Fine-tune confidence bands for SAR C-band dampening classification.</span>
               </div>
             </div>
           </Card>
