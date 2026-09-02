@@ -1,90 +1,131 @@
-import React from 'react';
-import { UploadCloud, ScanEye, Navigation2, FileSpreadsheet } from 'lucide-react';
+import React, { useState } from 'react';
+import { UploadCloud, ScanEye, Navigation2, FileSpreadsheet, ChevronRight } from 'lucide-react';
+import { RadarVisualization } from './RadarVisualization';
 
 export const HowItWorks: React.FC = () => {
+  const [activeStage, setActiveStage] = useState('03');
+
   const steps = [
     {
       num: '01',
-      title: 'SATELLITE IMAGE',
+      title: 'Satellite Image Ingestion',
+      subtitle: 'SAR & Optical Imagery',
       icon: UploadCloud,
-      desc: 'Upload high-resolution SAR (Synthetic Aperture Radar) or optical ocean scenes in standard GeoTIFF/raster formats.',
-      detail: 'Supports Sentinel-1, Sentinel-2, Landsat data formats',
+      desc: 'Ingest high-resolution Synthetic Aperture Radar (SAR) or optical satellite scenes in standard GeoTIFF formats.',
+      detail: 'Supports Sentinel-1 C-Band and optical imagery with automated geospatial metadata extraction.',
     },
     {
       num: '02',
-      title: 'SPILL DETECTION',
+      title: 'AI Spill Detection & Delineation',
+      subtitle: 'Neural Roughness Segmentation',
       icon: ScanEye,
-      desc: 'AI/ML segmentation models analyze radiometric roughness to distinguish true hydrocarbon slicks from biogenic look-alikes.',
-      detail: 'Confidence scoring, boundary delineation, estimated area',
+      desc: 'Deep learning segmentation distinguishes mineral hydrocarbon slicks from look-alikes and low-wind calm water.',
+      detail: 'Automated boundary vectorization, confidence scoring, and surface area calculation.',
     },
     {
       num: '03',
-      title: 'MARITIME ANALYSIS',
+      title: 'Spatio-Temporal AIS Analysis',
+      subtitle: 'Maritime Vessel Attribution',
       icon: Navigation2,
-      desc: 'Historical AIS vessel trajectories within the temporal spill window are correlated to isolate candidate vessels.',
-      detail: 'Closest point of approach (CPA) calculation & trajectory review',
+      desc: 'Historical AIS vessel trajectories are correlated within the detection window to isolate candidate source vessels.',
+      detail: 'Closest Point of Approach (CPA) calculation and kinematic trajectory backtracking.',
     },
     {
       num: '04',
-      title: 'EVIDENCE REPORT',
+      title: 'Chain-of-Custody Evidence Dossier',
+      subtitle: 'Forensic Investigation Records',
       icon: FileSpreadsheet,
-      desc: 'Generate a structured investigation dossier with geospatial coordinates, vessel metadata, and tamper-evident audit logs.',
-      detail: 'Maritime law enforcement & environmental agency ready',
+      desc: 'Generate a structured investigation dossier with geospatial coordinates, vessel logs, and audit records.',
+      detail: 'Standardized export package formatted for maritime authorities and enforcement agencies.',
     },
   ];
 
   return (
-    <section id="how-it-works" className="py-16 sm:py-20 border-b border-marine-750 bg-marine-950/60">
+    <section
+      id="how-it-works"
+      className="py-16 sm:py-24 border-b border-marine-800/80 bg-marine-950/60 relative"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="text-left max-w-3xl mb-12">
-          <span className="text-xs font-mono font-semibold uppercase tracking-wider text-teal-400">
-            System Workflow
+        <div className="text-left max-w-2xl mb-12 sm:mb-14">
+          <span className="text-xs font-semibold uppercase tracking-wider text-teal-400">
+            Workflow
           </span>
-          <h2 className="text-2xl sm:text-3xl font-bold text-marine-50 tracking-tight mt-1">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-marine-50 tracking-tight mt-2">
             How MarineGuard Operates
           </h2>
-          <p className="text-sm sm:text-base text-marine-300 mt-2">
-            A four-stage intelligence workflow transforming raw satellite telemetry into actionable maritime enforcement intelligence.
+          <p className="text-sm sm:text-base text-marine-300 mt-2.5 leading-relaxed">
+            A four-stage intelligence pipeline transforming raw satellite telemetry into actionable maritime investigation.
           </p>
         </div>
 
-        {/* 4 Steps Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-          {steps.map((step) => {
-            const Icon = step.icon;
-            return (
-              <div
-                key={step.num}
-                className="relative bg-marine-900 border border-marine-700/70 rounded-md p-5 flex flex-col justify-between hover:border-marine-600 transition-colors shadow-console"
-              >
-                <div>
-                  {/* Top Step Number & Icon */}
-                  <div className="flex items-center justify-between mb-4 border-b border-marine-800 pb-3">
-                    <span className="font-mono text-xl font-bold text-teal-400">
-                      {step.num}
-                    </span>
-                    <div className="w-8 h-8 rounded bg-marine-800 border border-marine-700 flex items-center justify-center text-marine-300">
+        {/* Dual Layout: Left Interactive Workflow Steps, Right Maritime Radar Scene */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          
+          {/* Left Column: 4-Stage Steps */}
+          <div className="lg:col-span-5 space-y-3">
+            {steps.map((step) => {
+              const Icon = step.icon;
+              const isActive = activeStage === step.num;
+
+              return (
+                <div
+                  key={step.num}
+                  onClick={() => setActiveStage(step.num)}
+                  className={`cursor-pointer rounded-lg p-4 border transition-all duration-150 text-left ${
+                    isActive
+                      ? 'bg-marine-900/90 border-marine-600/90 shadow-sm'
+                      : 'bg-marine-900/30 border-marine-800/60 hover:bg-marine-900/60 hover:border-marine-700/60'
+                  }`}
+                >
+                  <div className="flex items-start gap-3.5">
+                    {/* Step Icon */}
+                    <div
+                      className={`w-8 h-8 rounded-md flex items-center justify-center border shrink-0 transition-colors ${
+                        isActive
+                          ? 'bg-teal-950/80 border-teal-500/50 text-teal-300'
+                          : 'bg-marine-850 border-marine-750 text-marine-400'
+                      }`}
+                    >
                       <Icon className="w-4 h-4" />
                     </div>
+
+                    {/* Step Content */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-2">
+                        <h3 className="text-sm font-semibold text-marine-100 tracking-tight">
+                          {step.num} — {step.title}
+                        </h3>
+                        <ChevronRight
+                          className={`w-4 h-4 shrink-0 transition-transform ${
+                            isActive ? 'text-teal-400 translate-x-0.5' : 'text-marine-600'
+                          }`}
+                        />
+                      </div>
+
+                      <p className="text-xs text-marine-300 mt-1 leading-relaxed">
+                        {step.desc}
+                      </p>
+
+                      {/* Quiet Supporting Detail */}
+                      {isActive && (
+                        <div className="mt-2.5 pt-2.5 border-t border-marine-800 text-xs text-marine-400 leading-normal">
+                          {step.detail}
+                        </div>
+                      )}
+                    </div>
                   </div>
-
-                  <h3 className="text-sm font-bold tracking-wide text-marine-100 uppercase mb-2">
-                    {step.title}
-                  </h3>
-
-                  <p className="text-xs sm:text-sm text-marine-300 leading-relaxed mb-4">
-                    {step.desc}
-                  </p>
                 </div>
+              );
+            })}
+          </div>
 
-                <div className="pt-3 border-t border-marine-800/80 font-mono text-[11px] text-marine-400">
-                  {step.detail}
-                </div>
-              </div>
-            );
-          })}
+          {/* Right Column: Tactical Radar Visualization */}
+          <div className="lg:col-span-7 w-full flex items-center justify-center">
+            <RadarVisualization activeStep={activeStage} />
+          </div>
+
         </div>
 
       </div>

@@ -10,6 +10,8 @@
     "preview": "vite preview --host 0.0.0.0 --port 3000"
   },
   "dependencies": {
+    "@splinetool/react-spline": "^4.1.0",
+    "@splinetool/runtime": "^2.0.31",
     "clsx": "^2.1.1",
     "lucide-react": "^1.38.0",
     "react": "^19.2.8",
